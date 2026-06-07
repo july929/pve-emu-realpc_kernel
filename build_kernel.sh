@@ -10,7 +10,7 @@ git reset --hard 87f22e55de30d73b83722b86790394564036b33c # bump version to 7.0.
 apt install devscripts -y
 mk-build-deps --install
 git submodule update --init --recursive --force #强制更新所有子模块
-git pull #强制更新到最新版本内核
+#git pull #强制更新到最新版本内核
 cd submodules/zfsonlinux/
 mk-build-deps --install
 cd ../..
