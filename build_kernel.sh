@@ -6,12 +6,12 @@ ls
 df -h
 git clone git://git.proxmox.com/git/pve-kernel.git
 cd pve-kernel
-git reset --hard 73be71b638b063e4e69746d4d6b620f22205f785 # bump version to 6.14.11-9-pve
+#git reset --hard 73be71b638b063e4e69746d4d6b620f22205f785 # bump version to 6.14.11-9-pve
 #git reset --hard 87f22e55de30d73b83722b86790394564036b33c # bump version to 7.0.2-6-pve
 apt install devscripts -y
 mk-build-deps --install
 git submodule update --init --recursive --force #强制更新所有子模块
-#git pull #强制更新到最新版本内核
+git pull #强制更新到最新版本内核
 cd submodules/zfsonlinux/
 mk-build-deps --install
 cd ../..
