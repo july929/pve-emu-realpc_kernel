@@ -28,4 +28,7 @@ cd submodules/ubuntu-kernel/
 git diff > qemu-autoGenPatch.patch
 cp qemu-autoGenPatch.patch ../..
 cd ../..
-make
+cd submodules/ubuntu-kernel/
+make olddefconfig
+make -j$(nproc) M=arch/x86/kvm modules
+cd ../..
