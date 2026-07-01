@@ -6,7 +6,7 @@ ls
 df -h
 git clone git://git.proxmox.com/git/pve-kernel.git
 cd pve-kernel
-git reset --hard 3ed8dd29ffd238c80b6d873907c47e55a4df0d10 # bump version to 7.0.6-2-pve
+git reset --hard 8f9bb27ae8d7d040f0cae42d8506cd9167cf4e08 # bump version to 6.8.12-9-pve
 apt install devscripts -y
 mk-build-deps --install
 git submodule update --init --recursive --force
