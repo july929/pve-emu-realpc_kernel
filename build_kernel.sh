@@ -17,45 +17,7 @@ sed -i '/CPU_BASED_RDTSC_EXITING/d' submodules/ubuntu-kernel/arch/x86/kvm/vmx/vm
 sed -i 's/CPU_BASED_TPR_SHADOW/(CPU_BASED_TPR_SHADOW/g' submodules/ubuntu-kernel/arch/x86/kvm/vmx/vmx.h
 sed -i 's/exec_control \&= ~(CPU_BASED_RDTSC_EXITING |/exec_control \&= ~(/g' submodules/ubuntu-kernel/arch/x86/kvm/vmx/vmx.c
 sed -i 's/\/\* INTR_WINDOW_EXITING/exec_control |= CPU_BASED_RDTSC_EXITING; \/\/Ensure handle_rdtsc() is used.added line Julyblog \n\t\/\* INTR_WINDOW_EXITING/g' submodules/ubuntu-kernel/arch/x86/kvm/vmx/vmx.c
-#sed -i 's/static int handle_notify/static u32 print_once = 1;\n\nstatic int handle_rdtsc(struct kvm_vcpu *vcpu)\n{ \n\tstatic u64 rdtsc_fake = 0;\n\tstatic u64 rdtsc_prev = 0;\n\tu64 rdtsc_real = rdtsc();\n\n\tif(print_once)\n\t{\n\t\tprintk("[handle_rdtsc] fake rdtsc vmx function is working\\n");\n\t\tprint_once = 0;\n\t\trdtsc_fake = rdtsc_real;\n\t}\n\n\tif(rdtsc_prev != 0)\n\t{\n\t\tif(rdtsc_real > rdtsc_prev)\n\t\t{\n\t\t\tu64 diff = rdtsc_real - rdtsc_prev;\n\t\t\tu64 fake_diff =  diff \/ 16; \/\/ if you have 4.2Ghz on your vm, change 16 to 20 \n\t\t\trdtsc_fake += fake_diff;\n\t\t}\n\t}\n\tif(rdtsc_fake > rdtsc_real)\n\t{\n\t\trdtsc_fake = rdtsc_real;\n\t}\n\trdtsc_prev = rdtsc_real;\n\tvcpu->arch.regs[VCPU_REGS_RAX] = rdtsc_fake & -1u;\n\tvcpu->arch.regs[VCPU_REGS_RDX] = (rdtsc_fake >> 32) & -1u;  \n\n\treturn skip_emulated_instruction(vcpu);\n}\n\nstatic int handle_notify/g' submodules/ubuntu-kernel/arch/x86/kvm/vmx/vmx.c
-sed -i '/^static int handle_notify/,/^}/ {
-    /^static int handle_notify/ i\
-static u32 print_once = 1;\n\
-\n\
-static int handle_rdtsc(struct kvm_vcpu *vcpu)\n\
-{ \n\
-\tstatic u64 rdtsc_fake = 0;\n\
-\tstatic u64 rdtsc_prev = 0;\n\
-\tu64 rdtsc_real = rdtsc();\n\
-\n\
-\tif(print_once)\n\
-\t{\n\
-\t\tprintk(KERN_ALERT "[handle_rdtsc] fake rdtsc vmx function is working\\n");\n\
-\t\tprint_once = 0;\n\
-\t\trdtsc_fake = rdtsc_real;\n\
-\t}\n\
-\n\
-\tif(rdtsc_prev != 0)\n\
-\t{\n\
-\t\tif(rdtsc_real > rdtsc_prev)\n\
-\t\t{\n\
-\t\t\tu64 diff = rdtsc_real - rdtsc_prev;\n\
-\t\t\tu64 fake_diff =  diff / 16;\n\
-\t\t\trdtsc_fake += fake_diff;\n\
-\t\t}\n\
-\t}\n\
-\tif(rdtsc_fake > rdtsc_real)\n\
-\t{\n\
-\t\trdtsc_fake = rdtsc_real;\n\
-\t}\n\
-\trdtsc_prev = rdtsc_real;\n\
-\tvcpu->arch.regs[VCPU_REGS_RAX] = rdtsc_fake & -1u;\n\
-\tvcpu->arch.regs[VCPU_REGS_RDX] = (rdtsc_fake >> 32) & -1u;  \n\
-\n\
-\treturn skip_emulated_instruction(vcpu);\n\
-}\n
-    /^}/ d
-}' submodules/ubuntu-kernel/arch/x86/kvm/vmx/vmx.c
+sed -i 's/static u64 vmx_tertiary_exec_control/static u32 print_once = 1;\n\nstatic int handle_rdtsc(struct kvm_vcpu *vcpu)\n{ \n\tstatic u64 rdtsc_fake = 0;\n\tstatic u64 rdtsc_prev = 0;\n\tu64 rdtsc_real = rdtsc();\n\n\tif(print_once)\n\t{\n\t\tprintk("[handle_rdtsc] fake rdtsc vmx function is working\\n");\n\t\tprint_once = 0;\n\t\trdtsc_fake = rdtsc_real;\n\t}\n\n\tif(rdtsc_prev != 0)\n\t{\n\t\tif(rdtsc_real > rdtsc_prev)\n\t\t{\n\t\t\tu64 diff = rdtsc_real - rdtsc_prev;\n\t\t\tu64 fake_diff =  diff \/ 16; \/\/ if you have 4.2Ghz on your vm, change 16 to 20 \n\t\t\trdtsc_fake += fake_diff;\n\t\t}\n\t}\n\tif(rdtsc_fake > rdtsc_real)\n\t{\n\t\trdtsc_fake = rdtsc_real;\n\t}\n\trdtsc_prev = rdtsc_real;\n\tvcpu->arch.regs[VCPU_REGS_RAX] = rdtsc_fake & -1u;\n\tvcpu->arch.regs[VCPU_REGS_RDX] = (rdtsc_fake >> 32) & -1u;  \n\n\treturn skip_emulated_instruction(vcpu);\n}\n\nstatic u64 vmx_tertiary_exec_control/g' submodules/ubuntu-kernel/arch/x86/kvm/vmx/vmx.c
 sed -i 's/handle_notify,/handle_notify,\n\t[EXIT_REASON_RDTSC]                   = handle_rdtsc, \/\/added line Julyblog/g' submodules/ubuntu-kernel/arch/x86/kvm/vmx/vmx.c
 sed -i 's/int r, cpu;/int r, cpu;\n\tprintk(KERN_ALERT "kvm-intel.ko Julyblog  v1.0 Start,ok!!!\\n");\/\/added line Julyblog /g' submodules/ubuntu-kernel/arch/x86/kvm/vmx/vmx.c
 sed -i 's/svm_set_intercept(svm, INTERCEPT_RSM);/svm_set_intercept(svm, INTERCEPT_RSM);\n\tsvm_set_intercept(svm, INTERCEPT_RDTSC); \/\/added line Julyblog /g' submodules/ubuntu-kernel/arch/x86/kvm/svm/svm.c
